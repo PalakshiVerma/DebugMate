@@ -66,26 +66,29 @@ ${expected || "Not provided"}
 Keep the explanation beginner-friendly, concise, and practical. Avoid long overwhelming responses.
 `;
 
-    const modelName = "gemini-1.5-flash";
-    const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    const modelName = "gemini-1.5-flash-latest";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    
+    const requestBody = {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
+        }
+      ]
+    };
+
+    console.log("Sending request to Gemini API:", apiUrl);
+
+    const aiResponse = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt
-              }
-            ]
-          }
-        ],
-        generationConfig: {
-          responseMimeType: "application/json"
-        }
-      })
+      body: JSON.stringify(requestBody)
     });
 
     const data = await aiResponse.json();
@@ -116,10 +119,12 @@ Keep the explanation beginner-friendly, concise, and practical. Avoid long overw
     }
 
     let parsedResponse;
-
     try {
-      parsedResponse = JSON.parse(content);
+      // Clean potential markdown backticks from AI response
+      const cleaned = content.replace(/```json|```/g, "").trim();
+      parsedResponse = JSON.parse(cleaned);
     } catch (parseError) {
+      console.error("JSON parse error original:", content);
       console.error("JSON parse error:", parseError);
       return res.status(500).json({
         error: "AI returned invalid JSON.",
@@ -162,18 +167,22 @@ RULES:
       parts: [{ text: msg.text }]
     }));
 
-    const modelName = "gemini-1.5-flash";
-    const aiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    const modelName = "gemini-1.5-flash-latest";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    
+    const requestBody = {
+      systemInstruction: {
+        parts: [{ text: systemInstruction }]
+      },
+      contents: contents
+    };
+
+    const aiResponse = await fetch(apiUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: systemInstruction }]
-        },
-        contents: contents
-      })
+      body: JSON.stringify(requestBody)
     });
 
     const data = await aiResponse.json();

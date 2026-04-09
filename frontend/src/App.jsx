@@ -4,7 +4,7 @@ import WorkspaceInput from './components/WorkspaceInput';
 import AIResponse from './components/AIResponse';
 import ChatInput from './components/ChatInput';
 
-const BACKEND_URL = window.location.hostname === "localhost" 
+const BACKEND_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "[::1]")
   ? "http://localhost:3000" 
   : "https://debugmate-br7x.onrender.com";
 
