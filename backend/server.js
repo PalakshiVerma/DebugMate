@@ -66,7 +66,7 @@ ${expected || "Not provided"}
 Keep the explanation beginner-friendly, concise, and practical. Avoid long overwhelming responses.
 `;
 
-    const modelName = "gemini-2.5-pro";
+    const modelName = "gemini-2.5-flash";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
     const requestBody = {
