@@ -66,9 +66,9 @@ ${expected || "Not provided"}
 Keep the explanation beginner-friendly, concise, and practical. Avoid long overwhelming responses.
 `;
 
-    const modelName = "gemini-1.5-flash-latest";
+    const modelName = "gemini-2.5-pro";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-    
+
     const requestBody = {
       contents: [
         {
@@ -96,7 +96,7 @@ Keep the explanation beginner-friendly, concise, and practical. Avoid long overw
     if (!aiResponse.ok) {
       console.error("Gemini API error details:", JSON.stringify(data, null, 2));
       let userMessage = data.error?.message || "Unknown AI error";
-      
+
       if (data.error?.code === 503) {
         userMessage = "The AI service is currently overloaded. Please wait a moment and try again.";
       } else if (data.error?.status === "PERMISSION_DENIED") {
@@ -167,9 +167,9 @@ RULES:
       parts: [{ text: msg.text }]
     }));
 
-    const modelName = "gemini-1.5-flash-latest";
+    const modelName = "gemini-2.5-pro";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-    
+
     const requestBody = {
       systemInstruction: {
         parts: [{ text: systemInstruction }]
@@ -190,7 +190,7 @@ RULES:
     if (!aiResponse.ok) {
       console.error("Gemini API error details:", JSON.stringify(data, null, 2));
       let userMessage = data.error?.message || "Unknown AI error";
-      
+
       if (data.error?.code === 503) {
         userMessage = "The AI service is currently overloaded. Please wait a moment and try again.";
       } else if (data.error?.status === "PERMISSION_DENIED") {
